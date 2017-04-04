@@ -1,3 +1,5 @@
+*.gz
+*.csv
 .idea
 .DS_Store
 *.pyc
