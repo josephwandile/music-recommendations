@@ -19,7 +19,7 @@ train_file = 'data/train.csv'
 test_file = 'data/test.csv'
 soln_file = 'data/user_median.csv'
 profile_file = 'data/profiles.csv'
-num_train = 100000
+num_train = 12000
 
 # Read in data
 def loadUsers():
@@ -75,7 +75,7 @@ def loadTrain():
             if rows == num_train:
                 return (data, np.array(y), users, artists)
             user_info = user_dict[user]
-            data.append({"user_id": user, "artist_id": artist})#, "age": user_info['age'], "sex": user_info['sex'], "country": user_info["country"]})
+            data.append({"user_id": user, "artist_id": artist, "age": user_info['age'], "sex": user_info['sex'], "country": user_info["country"]})
             y.append(float(plays))
             users.add(user)
             artists.add(artist)
@@ -143,6 +143,7 @@ y_val = [float(play)*(maxy - miny) + miny for play in y_val]
 from sklearn.metrics import mean_absolute_error
 with open('resRF100000.txt', 'w') as f:
     f.write("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
+print("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
 print 'y_val', y_val[:100]
 print 'preds', preds[:100]
 
