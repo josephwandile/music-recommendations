@@ -18,9 +18,42 @@ from sklearn.preprocessing import normalize
 train_file = 'data/train.csv'
 test_file = 'data/test.csv'
 soln_file = 'data/user_median.csv'
-num_train = 20000
+profile_file = 'data/profiles.csv'
+num_train = 100000000
 
 # Read in data
+def loadUsers():
+    from collections import defaultdict
+    from random import random
+    average_age = 24.51
+
+    users = defaultdict(dict)
+    with open(profile_file, 'r') as train_fh:
+        train_csv = csv.reader(train_fh, delimiter=',', quotechar='"')
+        next(train_csv, None)
+        rows = 0
+        for row in train_csv:
+            if rows % 100000 == 0:
+                print 'row', rows
+            rows += 1
+            user = row[0]
+            sex = row[1]
+            age = row[2]
+            country = row[3]
+            if sex == "":
+                sex = 'm' if random() < .5 else 'f'
+            if age == "":
+                age = average_age
+            users[user]['sex'] = sex
+            users[user]['age'] = float(age)
+            users[user]['country'] = country
+    return users
+
+
+
+
+user_dict = loadUsers()
+
 def loadTrain():
     data = []
     y = []
@@ -41,8 +74,8 @@ def loadTrain():
             rows+=1
             if rows == num_train:
                 return (data, np.array(y), users, artists)
-
-            data.append({"user_id": user, "artist_id": artist})
+            user_info = user_dict[user]
+            data.append({"user_id": user, "artist_id": artist})#, "age": user_info['age'], "sex": user_info['sex'], "country": user_info["country"]})
             y.append(float(plays))
             users.add(user)
             artists.add(artist)
@@ -78,7 +111,7 @@ def loadTest():
     return (data, ids, users, artists, y)
 
 (data, y, users, artists) = loadTrain()
-maxy,miny = max(y),min(y)
+maxy,miny = max(y) * 100 ,min(y)
 print maxy, miny
 y = [(float(play) - miny)/(maxy - miny) for play in y]
 print y
@@ -97,7 +130,7 @@ X_val = v.transform(X_val)
 
 print "training FM"
 # Build and train a Factorization Machine
-fm = RandomForestRegressor()#pylibfm.FM(num_factors=10, num_iter=8, verbose=True, task="regression", initial_learning_rate=0.1, learning_rate_schedule="optimal")
+fm = pylibfm.FM(num_factors=10, num_iter=20, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
 
 fm.fit(X_train,y_train)
 # print "dumping"
