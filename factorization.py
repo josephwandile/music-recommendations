@@ -129,7 +129,7 @@ X_val = v.transform(X_val)
 
 print "training FM"
 # Build and train a Factorization Machine
-fm = pylibfm.FM(num_factors=10, num_iter=20, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
+fm = RandomForestRegressor(n_jobs=-1)# pylibfm.FM(num_factors=10, num_iter=20, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
 
 fm.fit(X_train,y_train)
 # print "dumping"
@@ -141,7 +141,7 @@ preds = fm.predict(X_val)
 preds = [float(play)*(maxy - miny) + miny for play in preds]
 y_val = [float(play)*(maxy - miny) + miny for play in y_val]
 from sklearn.metrics import mean_absolute_error
-with open('res.txt', 'w') as f:
+with open('resRF.txt', 'w') as f:
     f.write("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
 print 'y_val', y_val[:100]
 print 'preds', preds[:100]
@@ -177,7 +177,7 @@ for i,x in enumerate(chunks(data_test, 10000)):
 # y_test = fm.predict(X_test)
 y_test = [float(play)*(maxy - miny) + miny for play in y_test]
 print "solution writing"
-with open(soln_file, 'w') as soln_fh:
+with open(soln_file + 'rf.csv', 'w') as soln_fh:
     soln_csv = csv.writer(soln_fh,
                           delimiter=',',
                           quotechar='"',
