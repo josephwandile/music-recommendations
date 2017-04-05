@@ -26,6 +26,7 @@ with open(train_file, 'r') as train_fh:
 # Compute the global median and per-user median.
 plays_array  = []
 user_medians = {}
+
 for user, user_data in train_data.iteritems():
     user_plays = []
     for artist, plays in user_data.iteritems():
