@@ -161,10 +161,10 @@ print 'preds', preds[:100]
 print "loading testing"
 (data_test, ids_test, users_test, artists_test, y_test) = loadTest()
 # _, X_test, _, _ = train_test_split(data_test, y_test, test_size=1, random_state=43)
-u = DictVectorizer()
+
 
 print "test vectorize"
-X_test = u.fit_transform(data_test)
+X_test = v.transform(data_test)
 
 
 # y_test.extend(fm.predict(X_test[c * 10000 : ]))
