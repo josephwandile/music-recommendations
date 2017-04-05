@@ -114,7 +114,6 @@ def loadTest():
 maxy,miny = max(y) * 100 ,min(y)
 print maxy, miny
 y = [(float(play) - miny)/(maxy - miny) for play in y]
-print y
 
 
 print "tt split"
