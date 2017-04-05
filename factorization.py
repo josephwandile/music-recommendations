@@ -19,7 +19,7 @@ train_file = 'data/train.csv'
 test_file = 'data/test.csv'
 soln_file = 'data/user_median.csv'
 profile_file = 'data/profiles.csv'
-num_train = 100000000
+num_train = 100000
 
 # Read in data
 def loadUsers():
@@ -141,7 +141,7 @@ preds = fm.predict(X_val)
 preds = [float(play)*(maxy - miny) + miny for play in preds]
 y_val = [float(play)*(maxy - miny) + miny for play in y_val]
 from sklearn.metrics import mean_absolute_error
-with open('resRF.txt', 'w') as f:
+with open('resRF100000.txt', 'w') as f:
     f.write("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
 print 'y_val', y_val[:100]
 print 'preds', preds[:100]
@@ -177,7 +177,7 @@ for i,x in enumerate(chunks(data_test, 10000)):
 # y_test = fm.predict(X_test)
 y_test = [float(play)*(maxy - miny) + miny for play in y_test]
 print "solution writing"
-with open(soln_file + 'rf.csv', 'w') as soln_fh:
+with open(soln_file + 'rf100000.csv', 'w') as soln_fh:
     soln_csv = csv.writer(soln_fh,
                           delimiter=',',
                           quotechar='"',
