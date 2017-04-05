@@ -141,7 +141,8 @@ preds = fm.predict(X_val)
 preds = [float(play)*(maxy - miny) + miny for play in preds]
 y_val = [float(play)*(maxy - miny) + miny for play in y_val]
 from sklearn.metrics import mean_absolute_error
-print("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
+with open('res.txt', 'w') as f:
+    f.write("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
 print 'y_val', y_val[:100]
 print 'preds', preds[:100]
 
