@@ -122,41 +122,41 @@ def loadTest():
 
     return (data, ids, users, artists, y)
 
-# (data, y, users, artists) = loadTrain()
+(data, y, users, artists) = loadTrain()
 # # maxy,miny = max(y) * 500000 ,min(y)
 # # print maxy, miny
 # # y = [(float(play) - miny)/(maxy - miny) for play in y]
 #
 #
 # print "tt split"
-# X_train, X_val, y_train, y_val = train_test_split(data, y, test_size=0.2, random_state=42)
+X_train, X_val, y_train, y_val = train_test_split(data, y, test_size=0.2, random_state=42)
 #
 
 v = DictVectorizer()
-# print "train vectorize"
-# X_train = v.fit_transform(X_train)
-# print "val vectorize"
-# X_val = v.transform(X_val)
+print "train vectorize"
+X_train = v.fit_transform(X_train)
+print "val vectorize"
+X_val = v.transform(X_val)
 #
 #
-# print "training FM"
-# # Build and train a Factorization Machine
-# fm = RandomForestRegressor(n_estimators=120, n_jobs=-1)# pylibfm.FM(num_factors=10, num_iter=30, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
-# fm.fit(X_train,y_train)
+print "training FM"
+# Build and train a Factorization Machine
+fm = RandomForestRegressor(n_estimators=120, n_jobs=-1)# pylibfm.FM(num_factors=10, num_iter=30, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
+fm.fit(X_train,y_train)
 # # print "dumping"
-with open('RF120.pkl', 'rb') as f:
-    fm = pkl.load(f)
+# with open('RF120.pkl', 'rb') as f:
+#     fm = pkl.load(f)
 
 print "predicting"
-# preds = fm.predict(X_val)
+preds = fm.predict(X_val)
 # preds = [float(play)*(maxy - miny) + miny for play in preds]
 # y_val = [float(play)*(maxy - miny) + miny for play in y_val]
-# from sklearn.metrics import mean_absolute_error
-# with open('resRF120.txt', 'w') as f:
-#     f.write("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
-# print("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
-# print 'y_val', y_val[:100]
-# print 'preds', preds[:100]
+from sklearn.metrics import mean_absolute_error
+with open('resRF120.txt', 'w') as f:
+    f.write("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
+print("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
+print 'y_val', y_val[:100]
+print 'preds', preds[:100]
 
 print "loading testing"
 (data_test, ids_test, users_test, artists_test, y_test) = loadTest()
