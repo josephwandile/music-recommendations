@@ -19,7 +19,7 @@ train_file = 'data/train.csv'
 test_file = 'data/test.csv'
 soln_file = 'data/user_median.csv'
 profile_file = 'data/profiles.csv'
-num_train = 30000
+num_train = 50000
 
 # Read in data
 def loadUsers():
@@ -110,7 +110,7 @@ def loadTest():
             if rows <= 5:
                 print id, user, artist
             data.append({"user_id": user, "artist_id": artist,
-                         "age": profile_data['age'], "sex": profile_data['sex'],
+                         "age": profile_data[user]['age'], "sex": profile_data[user]['sex'],
                          "country": profile_data["country"],
                          "num_plays": profile_data[user]['num_plays'],
                          "num_artists": profile_data[user]['num_artists']}
@@ -144,15 +144,15 @@ print "training FM"
 fm = RandomForestRegressor(n_estimators=120, n_jobs=-1)# pylibfm.FM(num_factors=10, num_iter=30, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
 fm.fit(X_train,y_train)
 # print "dumping"
-# with open('FM.pkl', 'wb') as f:
-#     pkl.dump(fm, f)
+with open('RF120.pkl', 'wb') as f:
+    pkl.dump(fm, f)
 
 print "predicting"
 preds = fm.predict(X_val)
 # preds = [float(play)*(maxy - miny) + miny for play in preds]
 # y_val = [float(play)*(maxy - miny) + miny for play in y_val]
 from sklearn.metrics import mean_absolute_error
-with open('resRF100000.txt', 'w') as f:
+with open('resRF120.txt', 'w') as f:
     f.write("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
 print("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
 print 'y_val', y_val[:100]
@@ -181,7 +181,7 @@ X_test = u.fit_transform(data_test)
 #     y_test.extend(fm.predict(v.transform(x)))
 y_test = fm.predict(X_test)
 print "solution writing"
-with open(soln_file + 'rf100000.csv', 'w') as soln_fh:
+with open(soln_file + 'rf120.csv', 'w') as soln_fh:
     soln_csv = csv.writer(soln_fh,
                           delimiter=',',
                           quotechar='"',
