@@ -1,23 +1,25 @@
-import pandas as pd
-import pickle as pkl
 import csv
 import sys, os
 from scipy.sparse import *
 from sklearn.cross_validation import train_test_split
 from sklearn.ensemble import *
-from sklearn.linear_model import SGDRegressor
+from sklearn.linear_model import *
+import cPickle as pkl
+from sklearn.svm import *
 import numpy as np
 from sklearn.feature_extraction import DictVectorizer
+from sklearn.neighbors import *
 from pyfm import pylibfm
-from sklearn.preprocessing import normalize
-print "loading data"
-with open('X.pkl','rb') as f:
-    training_data = pkl.load(f)
+from sklearn.preprocessing import *
+
+# print "loading data"
+# with open('X.pkl','rb') as f:
+#     training_data = pkl.load(f)
 print "loading labels"
 with open('Y.pkl','rb') as f:
     training_labels = pkl.load(f)
 
-clf = RandomForestRegressor(n_estimators=500, n_jobs=-1)
+
 
 train_data = {}
 with open('data/train.csv', 'r') as train_fh:
@@ -66,6 +68,7 @@ with open('data/train.csv', 'r') as train_fh:
         median_data[count]['region_share'] = artist_lookup[artist][user_lookup[user]['region']]
         median_data[count]['total_plays'] = user_lookup[user]['total_plays']
         median_data[count]['age_diff'] = abs(user_lookup[user]['age'] - artist_lookup[artist]['average_age'])
+        median_data[count]['popularity'] = artist_lookup[artist]['popularity']
         male = (user_lookup[user]['sex'] == 'm')
         female = (user_lookup[user]['sex'] == 'f')
         m_interaction = 0
@@ -83,8 +86,7 @@ def train(X, y, clf):
     print "fitting"
     clf.fit(X_train, y_train)
     print "dumping model"
-    with open('RF.pkl', 'wb') as f:
-        pkl.dump(clf, f)
+
     print "predicting"
     preds = clf.predict(X_val)
 
@@ -92,9 +94,19 @@ def train(X, y, clf):
     with open('RFres.txt', 'w') as f:
         f.write("RF MSE: %.4f" % mean_absolute_error(y_val, preds))
     print("RF MSE: %.4f" % mean_absolute_error(y_val, preds))
-
+clf = RandomForestRegressor(n_estimators=300, n_jobs=-1)
 v = DictVectorizer()
-n_train = 100000
-td = v.fit_transform(training_data[:n_train])
+n_train = 400000
+td = v.fit_transform(median_data[:n_train])
 ty = training_labels[:n_train]
 train(td, ty, clf)
+
+valx = v.transform(median_data[-10000:])
+valy = training_labels[-10000:]
+preds = clf.predict(valx)
+from sklearn.metrics import mean_absolute_error
+print("RF MSE Second Validation: %.4f" % mean_absolute_error(valy, preds))
+
+with open('RFLarge.pkl', 'wb') as f:
+    pkl.dump(clf, f)
+
