@@ -17,7 +17,7 @@ with open('X.pkl','rb') as f:
 with open('Y.pkl','rb') as f:
     training_labels = pkl.load(f)
 
-clf = RandomForestRegressor(n_estimators=10, n_jobs=-1)
+clf = RandomForestRegressor(n_estimators=500, n_jobs=-1)
 
 def train(X, y, clf):
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
