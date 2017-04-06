@@ -21,7 +21,6 @@ clf = RandomForestRegressor(n_estimators=10, n_jobs=-1)
 
 def train(X, y, clf):
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
-    X_train =
     clf.fit(X_train, y_train)
     with open('RF.pkl', 'wb') as f:
         pkl.dump(clf, f)
