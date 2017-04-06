@@ -10,10 +10,10 @@ import numpy as np
 from sklearn.feature_extraction import DictVectorizer
 from pyfm import pylibfm
 from sklearn.preprocessing import normalize
-
+print "loading data"
 with open('X.pkl','rb') as f:
     training_data = pkl.load(f)
-
+print "loading labels"
 with open('Y.pkl','rb') as f:
     training_labels = pkl.load(f)
 
@@ -21,10 +21,12 @@ clf = RandomForestRegressor(n_estimators=500, n_jobs=-1)
 
 def train(X, y, clf):
     X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
+    print "fitting"
     clf.fit(X_train, y_train)
+    print "dumping model"
     with open('RF.pkl', 'wb') as f:
         pkl.dump(clf, f)
-
+    print "predicting"
     preds = clf.predict(X_val)
 
     from sklearn.metrics import mean_absolute_error
