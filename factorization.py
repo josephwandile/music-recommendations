@@ -71,8 +71,8 @@ def loadTrain():
             user = row[0]
             artist = row[1]
             plays = row[2]
-            if int(plays) >= 2000:
-                continue
+            # if int(plays) >= 800:
+            #     continue
             rows+=1
             if rows == num_train:
                 return (data, np.array(y), users, artists)
@@ -141,7 +141,7 @@ X_val = v.transform(X_val)
 #
 print "training FM"
 # Build and train a Factorization Machine
-fm = RandomForestRegressor(n_estimators=120, n_jobs=-1)# pylibfm.FM(num_factors=10, num_iter=30, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
+fm = RandomForestRegressor(n_estimators=1000, n_jobs=-1)# pylibfm.FM(num_factors=10, num_iter=30, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
 fm.fit(X_train,y_train)
 # # print "dumping"
 # with open('RF120.pkl', 'rb') as f:
@@ -157,14 +157,14 @@ with open('resRF120.txt', 'w') as f:
 print("FM MSE: %.4f" % mean_absolute_error(y_val,preds))
 print 'y_val', y_val[:100]
 print 'preds', preds[:100]
-
-print "loading testing"
-(data_test, ids_test, users_test, artists_test, y_test) = loadTest()
-# _, X_test, _, _ = train_test_split(data_test, y_test, test_size=1, random_state=43)
-
-
-print "test vectorize"
-X_test = v.transform(data_test)
+#
+# print "loading testing"
+# (data_test, ids_test, users_test, artists_test, y_test) = loadTest()
+# # _, X_test, _, _ = train_test_split(data_test, y_test, test_size=1, random_state=43)
+#
+#
+# print "test vectorize"
+# X_test = v.transform(data_test)
 
 
 # y_test.extend(fm.predict(X_test[c * 10000 : ]))
@@ -179,16 +179,16 @@ X_test = v.transform(data_test)
 #     if i % 10 == 0:
 #         print "predicting", i * 10000
 #     y_test.extend(fm.predict(v.transform(x)))
-y_test = fm.predict(X_test)
-print "solution writing"
-with open(soln_file + 'rf120.csv', 'w') as soln_fh:
-    soln_csv = csv.writer(soln_fh,
-                          delimiter=',',
-                          quotechar='"',
-                          quoting=csv.QUOTE_MINIMAL)
-    soln_csv.writerow(['Id', 'plays'])
-    for id, play in zip(ids_test, y_test):
-        soln_csv.writerow([id, play])
+# y_test = fm.predict(X_test)
+# print "solution writing"
+# with open(soln_file + 'rf120.csv', 'w') as soln_fh:
+#     soln_csv = csv.writer(soln_fh,
+#                           delimiter=',',
+#                           quotechar='"',
+#                           quoting=csv.QUOTE_MINIMAL)
+#     soln_csv.writerow(['Id', 'plays'])
+#     for id, play in zip(ids_test, y_test):
+#         soln_csv.writerow([id, play])
 
 
 
