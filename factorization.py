@@ -143,9 +143,9 @@ print "training FM"
 # Build and train a Factorization Machine
 fm = RandomForestRegressor(n_estimators=1000, n_jobs=-1)# pylibfm.FM(num_factors=10, num_iter=30, verbose=True, task="regression", initial_learning_rate=0.8, learning_rate_schedule="optimal")
 fm.fit(X_train,y_train)
-# # print "dumping"
-# with open('RF120.pkl', 'rb') as f:
-#     fm = pkl.load(f)
+# print "dumping"
+with open('RF1000.pkl', 'wb') as f:
+    pkl.dump(fm, f)
 
 print "predicting"
 preds = fm.predict(X_val)
