@@ -91,12 +91,12 @@ def train(X, y, clf):
     preds = clf.predict(X_val)
 
     from sklearn.metrics import mean_absolute_error
-    with open('RFres.txt', 'w') as f:
+    with open('RF200000_200.txt', 'w') as f:
         f.write("RF MSE: %.4f" % mean_absolute_error(y_val, preds))
     print("RF MSE: %.4f" % mean_absolute_error(y_val, preds))
-clf = RandomForestRegressor(n_estimators=300, n_jobs=-1)
+clf = RandomForestRegressor(n_estimators=200, n_jobs=-1)
 v = DictVectorizer()
-n_train = 400000
+n_train = 200000
 td = v.fit_transform(median_data[:n_train])
 ty = training_labels[:n_train]
 train(td, ty, clf)
